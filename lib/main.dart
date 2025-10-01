@@ -42,11 +42,69 @@ class FadingTextAnimation extends StatefulWidget {
 
 class _FadingTextAnimationState extends State<FadingTextAnimation> {
   bool _isVisible = true;
+  Color _textColor = Colors.blue;
 
   void toggleVisibility() {
     setState(() {
       _isVisible = !_isVisible;
     });
+  }
+
+  void pickColorBuiltIn() {
+    final colors = <Color>[
+      Colors.black,
+      Colors.white,
+      Colors.red,
+      Colors.green,
+      Colors.blue,
+      Colors.orange,
+      Colors.purple,
+      Colors.teal,
+      Colors.brown,
+      Colors.pink,
+      Colors.amber,
+      Colors.indigo,
+    ];
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Pick a color'),
+          content: SingleChildScrollView(
+            child: Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: colors.map((c) {
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _textColor = c;
+                    });
+                    Navigator.of(context).pop();
+                  },
+                  child: Container(
+                    width: 36,
+                    height: 36,
+                    decoration: BoxDecoration(
+                      color: c,
+                      border: Border.all(width: 1, color: Colors.black12),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('Cancel'),
+            )
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -56,9 +114,13 @@ class _FadingTextAnimationState extends State<FadingTextAnimation> {
         title: Text('Fading Text Animation'),
         actions: [
           IconButton(
-            icon: Icon(widget.isDark ? Icons.dark_mode : Icons.light_mode),
+            icon: Icon(widget.isDark ? Icons.nights_stay : Icons.wb_sunny),
             onPressed: widget.toggleTheme,
-          )
+          ),
+          IconButton(
+            icon: Icon(Icons.color_lens),
+            onPressed: pickColorBuiltIn,
+          ),
         ],
       ),
       body: PageView(
@@ -69,7 +131,7 @@ class _FadingTextAnimationState extends State<FadingTextAnimation> {
               duration: Duration(seconds: 1),
               child: Text(
                 'Hello, Flutter!',
-                style: TextStyle(fontSize: 24),
+                style: TextStyle(fontSize: 24, color: _textColor),
               ),
             ),
           ),
@@ -79,7 +141,7 @@ class _FadingTextAnimationState extends State<FadingTextAnimation> {
               duration: Duration(seconds: 3),
               child: Text(
                 'Second Screen Fade!',
-                style: TextStyle(fontSize: 28),
+                style: TextStyle(fontSize: 28, color: _textColor),
               ),
             ),
           ),
