@@ -43,6 +43,7 @@ class FadingTextAnimation extends StatefulWidget {
 class _FadingTextAnimationState extends State<FadingTextAnimation> {
   bool _isVisible = true;
   Color _textColor = Colors.blue;
+  bool _showFrame = false;
 
   void toggleVisibility() {
     setState(() {
@@ -125,15 +126,42 @@ class _FadingTextAnimationState extends State<FadingTextAnimation> {
       ),
       body: PageView(
         children: [
-          Center(
-            child: AnimatedOpacity(
-              opacity: _isVisible ? 1.0 : 0.0,
-              duration: Duration(seconds: 1),
-              child: Text(
-                'Hello, Flutter!',
-                style: TextStyle(fontSize: 24, color: _textColor),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              AnimatedOpacity(
+                opacity: _isVisible ? 1.0 : 0.0,
+                duration: Duration(seconds: 1),
+                child: Text(
+                  'Hello, Flutter!',
+                  style: TextStyle(fontSize: 24, color: _textColor),
+                ),
               ),
-            ),
+              SizedBox(height: 20),
+              SwitchListTile(
+                title: Text("Show Frame"),
+                value: _showFrame,
+                onChanged: (val) {
+                  setState(() {
+                    _showFrame = val;
+                  });
+                },
+              ),
+              Container(
+                decoration: _showFrame
+                    ? BoxDecoration(
+                        border: Border.all(color: Colors.blue, width: 4),
+                        borderRadius: BorderRadius.circular(16),
+                      )
+                    : null,
+                child: Image.asset(
+                  'images/oip.webp',
+                  width: 200,
+                  height: 200,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ],
           ),
           Center(
             child: AnimatedOpacity(
