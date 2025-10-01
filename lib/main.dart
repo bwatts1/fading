@@ -1,20 +1,41 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  bool _isDark = false;
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: FadingTextAnimation(),
+      theme: ThemeData.light(),
+      darkTheme: ThemeData.dark(),
+      themeMode: _isDark ? ThemeMode.dark : ThemeMode.light,
+      home: FadingTextAnimation(
+        toggleTheme: () {
+          setState(() {
+            _isDark = !_isDark;
+          });
+        },
+        isDark: _isDark,
+      ),
     );
   }
 }
 
 class FadingTextAnimation extends StatefulWidget {
+  final VoidCallback toggleTheme;
+  final bool isDark;
+
+  FadingTextAnimation({required this.toggleTheme, required this.isDark});
+
   @override
   _FadingTextAnimationState createState() => _FadingTextAnimationState();
 }
@@ -35,9 +56,9 @@ class _FadingTextAnimationState extends State<FadingTextAnimation> {
         title: Text('Fading Text Animation'),
         actions: [
           IconButton(
-            icon: Icon(Icons.color_lens),
-            onPressed: () {},
-          ),
+            icon: Icon(widget.isDark ? Icons.dark_mode : Icons.light_mode),
+            onPressed: widget.toggleTheme,
+          )
         ],
       ),
       body: PageView(
